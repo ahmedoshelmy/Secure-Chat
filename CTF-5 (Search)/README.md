@@ -8,6 +8,10 @@ _The flag structure can be one of three:_
 3. fastctf{some_text}
 4. SOME_TEXT
 
+### Solution
+picoCTF{grep_is_good_to_find_things_dba08a45}
+
+
 
 ### Assumptions till now
 - `SOME_TEXT` flag need to have at least char before and after `_`
