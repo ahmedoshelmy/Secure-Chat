@@ -31,7 +31,7 @@ $\therefore Y_0 = (\text{ LSB}(X_0) + K_0)\%16 + \text{'a'}$
 
 ### Attack Analysis
 using brute force attack to generate 3 possible message
-- only characters we need to try are from `'a'+[0-15]` making bruteforce solution $O(16^n)$
+- only characters we need to try are from `'a'+[0-15]` making bruteforce solution $O(16^{2n})$
 - using hint _(key = one character)_ we could simplify ___Monoalphabetic algorithm___ to ___Casear algorithm___ making bruteforce solution only $O(16)$ 
 - with $16$ possible output message we could minimize it more by checking on all characters if it's ascii 
     - typically ascii character is `7-bit` number from (0-127) we can reject any key will result `1` on the `8-bit` 
