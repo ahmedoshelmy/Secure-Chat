@@ -14,7 +14,7 @@
 - string library
 
 ### Encryption Algorithm Flow
-<img src="./diagrams/enc_flow.png" alt="big diagram of encryption" width="600"/> 
+<img src="diagrams/enc_flow.png" alt="big diagram of encryption" width="600"/> 
 
 let \
 $ Message = X_n, X_{n-1}, .... X_0 $ \
@@ -24,10 +24,10 @@ $Cipher = Y_{2n}, ... Y_0$  \
 $\therefore Y_1 = (\text{ MSB}(X_0) + K_1)\%16 + \text{'a'}$ \
 $\therefore Y_0 = (\text{ LSB}(X_0) + K_0)\%16 + \text{'a'}$ 
 
-<img src="./diagrams/enc_flow_math.png" alt="math diagram of encryption" width="600"/> 
+<img src="diagrams/enc_flow_math.png" alt="math diagram of encryption" width="600"/> 
 
 ### Decryption Algorith Flow
-<img src="./diagrams/dec_flow.png" alt="big diagram of decryption" width="600"/> 
+<img src="diagrams/dec_flow.png" alt="big diagram of decryption" width="600"/> 
 
 ### Attack Analysis
 using brute force attack to generate 3 possible message

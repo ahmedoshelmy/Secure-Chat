@@ -24,11 +24,11 @@ def attack_one_char_key(cipher: str) -> list:
     return possible_msgs
         
 if __name__ == "__main__":
-    with open("./cipher.txt", "r") as cipher_file:
+    with open("cipher.txt", "r") as cipher_file:
         cipher = cipher_file.read()
         
         possible_msgs = attack_one_char_key(cipher)
 
-        with open("./possible_results.txt", "w") as out_file:
+        with open("possible_results.txt", "w") as out_file:
             out_file.write("\n".join(possible_msgs))
         
