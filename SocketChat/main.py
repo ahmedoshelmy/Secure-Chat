@@ -1,25 +1,26 @@
 from DiffieHellman import DiffieHellman
+from Elgamal import Elgamal
+from Hashing import Hashing
 
 
 def main():
-    q = 1021
-    a = 2
-    alice = DiffieHellman(q, a)
-    bob = DiffieHellman(q, a)
+    q_diff = 1021
+    a_diff = 2
 
-    # Exchange public keys
-    alice_public_key = alice.get_public_key()
-    bob_public_key = bob.get_public_key()
+    q_gamal = 1021
+    a_gamal = 2
 
-    print(f"Alice's public key: {alice_public_key}")
-    print(f"Bob's public key: {bob_public_key}")
+    message = "Hello World!"
+    diff_hellman = DiffieHellman(q_diff, a_diff)
+    elgamal = Elgamal(q_gamal, a_gamal)
+    elgamal2 = Elgamal(q_gamal, a_gamal)
 
-    # Calculate shared secret keys
-    alice_shared_key = alice.calculate_shared_secret_key(bob_public_key)
-    bob_shared_key = bob.calculate_shared_secret_key(alice_public_key)
+    hashing = Hashing(q_gamal)
 
-    print(f"Alice's shared secret key: {alice_shared_key}")
-    print(f"Bob's shared secret key: {bob_shared_key}")
+    # Proving that when a different public key is sent the signature verifying failed
+    m = hashing.hash(message)
+    s1, s2 = elgamal.sign_message(m)
+    print(elgamal.verify_signature(m, s1, s2, elgamal2.get_public_key()))
 
 
 # If the script is executed directly (not imported as a module)

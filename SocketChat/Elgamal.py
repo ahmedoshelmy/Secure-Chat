@@ -1,4 +1,5 @@
 import random
+from NumberTheory import NumberTheory
 
 
 class Elgamal:
@@ -8,22 +9,31 @@ class Elgamal:
         self.x = random.randint(1, self.q - 1)  # Private key
         self.y = pow(self.a, self.x, self.q)  # Public key
 
-    def encrypt(self, message):
+    def sign_message(self, message):
         """Encrypts a message (plaintext) using the public key."""
         if message >= self.q:
             raise ValueError("Message cannot be greater than or equal to q.")
 
-        k = random.randint(1, self.q - 1)  # Random key
-        c1 = pow(self.a, k, self.q)
-        c2 = message * pow(self.y, k, self.q) % self.q
-        return c1, c2
+        number_theory = NumberTheory()
+        k = number_theory.get_coprime_number(self.q - 1)
+        k_inverse = number_theory.mod_inverse(k, self.q - 1)
+        s1 = pow(self.a, k, self.q)
+        s2 = k_inverse * (message - self.x * s1) % (self.q - 1)
+        return s1, s2
 
-    def decrypt(self, ciphertext):
-        """Decrypts a ciphertext using the private key (x)
+    def verify_signature(self, message, s1, s2, y):
+        """Verifies the signature of a message (plaintext)
+
+            Args:
+          message: Encrypted message
+          s1 and s2: signature
+          y: public key of sender
         Returns:
           Message: Decrypted message
         """
-        if not self.x:
-            raise ValueError("Private key not generated. Please generate a key first.")
-        c1, c2 = ciphertext
-        return pow(c2, -self.x, self.q) % self.q
+        v1 = pow(self.a, message, self.q)
+        v2 = pow(y, s1, self.q) * pow(s1, s2, self.q) % self.q
+        return v1 == v2
+
+    def get_public_key(self):
+        return self.y

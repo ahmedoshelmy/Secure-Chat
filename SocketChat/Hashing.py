@@ -17,7 +17,7 @@ class Hashing:
         self.mask = (1 << (int(math.log(q, 2)))) - 1
 
     def hash(self, message):
-        sha1_hash = hashlib.sha1(message).digest()
+        sha1_hash = hashlib.sha1(message.encode()).digest()
         digest_int = int.from_bytes(sha1_hash, byteorder='big')
         chosen_bits = digest_int & self.mask
         return chosen_bits
