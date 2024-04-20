@@ -9,9 +9,7 @@ class Elgamal:
         self.y = pow(self.a, self.x, self.q)  # Public key
 
     def encrypt(self, message):
-        """Encrypts a message (plaintext) using the public key (h)."""
-        if not self.h:
-            raise ValueError("Public key not generated. Please generate a key first.")
+        """Encrypts a message (plaintext) using the public key."""
         if message >= self.q:
             raise ValueError("Message cannot be greater than or equal to q.")
 
@@ -21,7 +19,10 @@ class Elgamal:
         return c1, c2
 
     def decrypt(self, ciphertext):
-        """Decrypts a ciphertext using the private key (x)."""
+        """Decrypts a ciphertext using the private key (x)
+        Returns:
+          Message: Decrypted message
+        """
         if not self.x:
             raise ValueError("Private key not generated. Please generate a key first.")
         c1, c2 = ciphertext

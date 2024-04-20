@@ -30,3 +30,6 @@ class DiffieHellman:
           Shared Secret Key
         """
         return (other_public_key ** self.x) % self.q
+
+    def get_public_key(self):
+        return self.y
