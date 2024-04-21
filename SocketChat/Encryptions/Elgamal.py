@@ -1,5 +1,5 @@
 import random
-from NumberTheory import NumberTheory
+from . import NumberTheory
 
 
 class Elgamal:
@@ -14,7 +14,7 @@ class Elgamal:
         if message >= self.q:
             raise ValueError("Message cannot be greater than or equal to q.")
 
-        number_theory = NumberTheory()
+        number_theory = NumberTheory.NumberTheory()
         k = number_theory.get_coprime_number(self.q - 1)
         k_inverse = number_theory.mod_inverse(k, self.q - 1)
         s1 = pow(self.a, k, self.q)
