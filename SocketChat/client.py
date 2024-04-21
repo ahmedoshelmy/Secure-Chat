@@ -4,14 +4,16 @@ from Encryptions import Elgamal, DiffieHellman, Hashing
 import json
 
 sio = socketio.Client()
-sio.connect('http://localhost:5000')
 
 isVerified = False
 elgamal_user_pk = None
+isConnected = False
 
 
 @sio.event
 def connect():
+    global isConnected
+    isConnected = True
     print('connection established')
 
 
@@ -22,8 +24,12 @@ def disconnect():
 
 @sio.event
 def KEY_EXCHANGE(data):
+    global isConnected
+    while (not isConnected):
+        pass
     print('KEY_EXCHANGE received:', data)
-    # sio.emit('ELGAMAL_PK', elgamal.get_public_key())
+    print('Generating Elgamal public key...', elgamal.get_public_key())
+    sio.emit('ELGAMAL_PK', str(elgamal.get_public_key()))
 
 
 @sio.event
@@ -59,7 +65,7 @@ def DEFF_HELLMAN_PK_BC(data):
     # verify the signature
     m = hashing.hash(message=str(deff_hellman_user_pk))
     print(f"m : {m}")
-    isVerified = elgamal.verify_signature(m, deff_user_s1, deff_user_s2, elgamal_user_pk)
+    isVerified = elgamal.verify_signature(m, deff_user_s1, deff_user_s2, int(elgamal_user_pk))
 
     if not isVerified:
         print("Signature verification failed")
@@ -68,10 +74,11 @@ def DEFF_HELLMAN_PK_BC(data):
 
 @sio.event
 def received_message(data):
-    print('Message received:', data)
+    print(f"\nMessage received:{data}\nEnter a message")
 
 
 if __name__ == '__main__':
+
     q_gamal = 1021
     a_gamal = 2
     elgamal = Elgamal.Elgamal(q_gamal, a_gamal)
@@ -82,6 +89,7 @@ if __name__ == '__main__':
     hashing = Hashing.Hashing(q_gamal)
     m = hashing.hash(message=str(diff_hellman.get_public_key()))
     s1, s2 = elgamal.sign_message(m)
+    sio.connect('http://localhost:5000')
 
     while (1):
         if isVerified:
