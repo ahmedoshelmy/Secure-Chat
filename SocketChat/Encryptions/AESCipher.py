@@ -1,6 +1,7 @@
 from Cryptodome.Cipher import AES
 from Cryptodome.Random import get_random_bytes
 from Cryptodome.Util.Padding import pad, unpad
+import base64
 
 
 class AESCipher:
@@ -30,12 +31,17 @@ class AESCipher:
         Returns:
             The encrypted ciphertext (bytes) and the initialization vector (IV).
         """
-        iv = get_random_bytes(16)  # Generate a random IV
+        # Ensure data is bytes
+        if not isinstance(data, bytes):
+            data = data.encode()
+
+        iv = get_random_bytes(16)
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
-        print(type(data))
-        padded_data = pad(data.encode(), AES.block_size)  # PKCS#7 padding
+        padded_data = pad(data, AES.block_size)  # PKCS#7 padding
         ciphertext = cipher.encrypt(padded_data)
-        return ciphertext, iv
+        print("Enc", iv, ciphertext)
+        print("Enc", self.key)
+        return base64.b64encode(ciphertext).decode(), base64.b64encode(iv).decode()  # Encode IV to string
 
     def decrypt(self, ciphertext, iv):
         """
@@ -48,9 +54,12 @@ class AESCipher:
         Returns:
             The decrypted plaintext (bytes).
         """
+        iv = base64.b64decode(iv)  # Decode IV from string
+        ciphertext = base64.b64decode(ciphertext)
         if len(iv) != 16:
             raise ValueError("Initialization vector (IV) must be 16 bytes.")
-
+        print("Dec", iv, ciphertext)
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
         decrypted_data = cipher.decrypt(ciphertext)
-        return unpad(decrypted_data, AES.block_size)  # PKCS#7 unpadding
+        print("Dec", self.key)
+        return unpad(decrypted_data, AES.block_size)
