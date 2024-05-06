@@ -1,8 +1,6 @@
 import socketio
-import eventlet
 from Encryptions import Elgamal, DiffieHellman, Hashing, AESCipher
 import json
-import base64
 
 sio = socketio.Client()
 
