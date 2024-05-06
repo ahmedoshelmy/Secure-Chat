@@ -13,7 +13,10 @@ def decrypt_caesar(ciphertext, shift):
 Trying the Caesar cipher with different shift values couldn't extract the original message. It's possible that the text is encrypted using a different method or a more complex cipher. Further analysis and experimentation may be needed to decrypt the text successfully.
 ##### Frequency Analysis with monoalphabetic substitution
 ![alt text](output.png)
+
 Using frequency analysis, I analyzed the distribution of letters in the encrypted text and compared it to the expected frequency distribution of letters in English text. By identifying common patterns and frequencies, I attempted to map the encrypted letters to their plaintext counterparts. 
+
+
 ```python:
 def frequency_analysis(ciphertext):
     total = sum(char.isalpha() for char in ciphertext)
