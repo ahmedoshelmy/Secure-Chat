@@ -1,4 +1,5 @@
 import random
+from . import NumberTheory
 
 
 class DiffieHellman:
@@ -14,10 +15,15 @@ class DiffieHellman:
           q: A large prime number.
           a: A primitive root modulo the prime number.
         """
+        self.number_theory = NumberTheory.NumberTheory()
         self.q = q
         self.a = a
         self.x = random.randint(0, self.q - 1)  # Private Key
-        self.y = (self.a ** self.x) % self.q  # Public Key
+        # self.y = (self.a ** self.x) % self.q  # Public Key
+        # Binary Exponentiation for large numbers
+        self.y = self.number_theory.binary_exponentiation(self.a, self.x, self.q) % self.q  # Public Key
+
+        print("DiffieHellman initialized")
 
     def calculate_shared_secret_key(self, other_public_key):
         """
@@ -29,7 +35,7 @@ class DiffieHellman:
         Returns:
           Shared Secret Key
         """
-        return (other_public_key ** self.x) % self.q
+        return self.number_theory.binary_exponentiation(other_public_key, self.x, self.q)
 
     def get_public_key(self):
         return self.y

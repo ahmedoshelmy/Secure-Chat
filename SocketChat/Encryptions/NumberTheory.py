@@ -125,3 +125,27 @@ class NumberTheory:
         while self.gcd(x, m) != 1:
             x = random.randint(1, m - 1)
         return x
+
+    def binary_exponentiation(self, a, b, mod):
+        """
+        Calculates a raised to the power of b efficiently using binary exponentiation.
+
+        Args:
+            a: The base number.
+            b: The exponent (power).
+            mod: The modulus.
+
+        Returns:
+            a raised to the power of b.
+        """
+        result = 1
+        while b > 0:
+            # Check if the least significant bit of b is 1
+            if b & 1:
+                result = (result * a) % mod  # Efficient multiplication with modulo
+
+            # Square the base and right shift the exponent
+            a = (a * a) % mod
+            b >>= 1  # Same as b // 2, but faster
+
+        return result

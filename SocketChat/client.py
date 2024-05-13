@@ -2,6 +2,9 @@ import socketio
 from Encryptions import Elgamal, DiffieHellman, Hashing, AESCipher
 import json
 
+# ----------------------------------- Initializing  ------------------------------------
+
+
 sio = socketio.Client()
 
 is_verified = False
@@ -26,7 +29,7 @@ def disconnect():
 @sio.event
 def KEY_EXCHANGE(data):
     global is_connected
-    while (not is_connected):
+    while not is_connected:
         pass
     print('KEY_EXCHANGE received:', data)
     print('Generating Elgamal public key...', elgamal.get_public_key())
@@ -39,40 +42,40 @@ def ELGAMAL_PK_BC(data):
     print('ELGAMAL_PK_BC received:', data)
     elgamal_user_pk = data
 
-    # emit deff hellman public key
+    # emit diff hellman public key
     data_json = {
-        "deff_public_key": diff_hellman.get_public_key(),
+        "diff_public_key": diff_hellman.get_public_key(),
         "s1": s1,
         "s2": s2
     }
 
-    message_str = json.dumps(data_json)
+    diff_hellman_json = json.dumps(data_json)
 
-    sio.emit('DEFF_HELLMAN_PK', message_str)
+    sio.emit('DIFF_HELLMAN_PK', diff_hellman_json)
 
 
 @sio.event
-def DEFF_HELLMAN_PK_BC(data):
-    global deff_hellman_user_pk, deff_user_s1, deff_user_s2, is_verified, hashing, elgamal_user_pk, aes_cipher
+def DIFF_HELLMAN_PK_BC(data):
+    global diff_hellman_user_pk, diff_user_s1, diff_user_s2, is_verified, hashing, elgamal_user_pk, aes_cipher
     json_data = json.loads(data)
-    deff_hellman_user_pk = json_data["deff_public_key"]
-    deff_user_s1 = json_data["s1"]
-    deff_user_s2 = json_data["s2"]
+    diff_hellman_user_pk = json_data["diff_public_key"]
+    diff_user_s1 = json_data["s1"]
+    diff_user_s2 = json_data["s2"]
     print(json_data)
 
-    while (elgamal_user_pk == None):
+    while elgamal_user_pk is None:
         pass
     # verify the signature
-    m = hashing.hash(message=str(deff_hellman_user_pk))
-    is_verified = elgamal.verify_signature(m, deff_user_s1, deff_user_s2, int(elgamal_user_pk))
+    m = hashing.hash_sha1(message=str(diff_hellman_user_pk))
+    is_verified = elgamal.verify_signature(m, diff_user_s1, diff_user_s2, int(elgamal_user_pk))
 
     if not is_verified:
         print("Signature verification failed")
         sio.disconnect()
     else:
-        shared_key = diff_hellman.calculate_shared_secret_key(int(deff_hellman_user_pk))
+        shared_key = diff_hellman.calculate_shared_secret_key(int(diff_hellman_user_pk))
         print(f"shared_key: {shared_key}")
-        key256 = hashing.sha256(str(shared_key).encode())
+        key256 = hashing.hash_sha256(str(shared_key).encode())
         aes_cipher = AESCipher.AESCipher(key256)
 
 
@@ -119,12 +122,14 @@ if __name__ == '__main__':
     q_diff, a_diff = read_key_pair('./Encryptions/diff_hellman_keys.txt')
     q_gamal, a_gamal = read_key_pair('./Encryptions/elgamal_keys.txt')
 
-    # Initializing Encryption
+    # Initializing Encryption and Generating Public and Private Keys
     elgamal = Elgamal.Elgamal(q_gamal, a_gamal)
     diff_hellman = DiffieHellman.DiffieHellman(q_diff, a_diff)
+    print(diff_hellman.get_public_key())
     hashing = Hashing.Hashing(q_gamal)
 
-    m = hashing.hash(message=str(diff_hellman.get_public_key()))
+    # Hashing the Public Key of Diffie-Hellman to be used in the Elgamal Digital Signature
+    m = hashing.hash_sha1(message=str(diff_hellman.get_public_key()))
     s1, s2 = elgamal.sign_message(m)
     sio.connect('http://localhost:5000')
     print("Diff,S1,S2", diff_hellman.get_public_key(), s1, s2)

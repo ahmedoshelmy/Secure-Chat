@@ -16,13 +16,13 @@ class Hashing:
         self.q = q
         self.mask = (1 << (int(math.log(q, 2)))) - 1
 
-    def hash(self, message):
+    def hash_sha1(self, message):
         sha1_hash = hashlib.sha1(message.encode()).digest()
         digest_int = int.from_bytes(sha1_hash, byteorder='big')
         chosen_bits = digest_int & self.mask
         return chosen_bits
 
-    def sha256(self, message):
+    def hash_sha256(self, message):
         """
         Hashes the message using SHA-256 algorithm and returns the full digest (bytes).
 

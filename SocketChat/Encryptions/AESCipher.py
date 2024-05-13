@@ -39,8 +39,8 @@ class AESCipher:
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
         padded_data = pad(data, AES.block_size)  # PKCS#7 padding
         ciphertext = cipher.encrypt(padded_data)
-        print("Enc", iv, ciphertext)
-        print("Enc", self.key)
+        # print("Enc", iv, ciphertext)
+        # print("Enc", self.key)
         return base64.b64encode(ciphertext).decode(), base64.b64encode(iv).decode()  # Encode IV to string
 
     def decrypt(self, ciphertext, iv):
@@ -58,8 +58,8 @@ class AESCipher:
         ciphertext = base64.b64decode(ciphertext)
         if len(iv) != 16:
             raise ValueError("Initialization vector (IV) must be 16 bytes.")
-        print("Dec", iv, ciphertext)
+        # print("Dec", iv, ciphertext)
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
         decrypted_data = cipher.decrypt(ciphertext)
-        print("Dec", self.key)
+        # print("Dec", self.key)
         return unpad(decrypted_data, AES.block_size)

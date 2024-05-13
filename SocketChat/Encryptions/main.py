@@ -38,7 +38,7 @@ def main():
     hashing = Hashing(q_gamal)
 
     key = diff_hellman.calculate_shared_secret_key(elgamal2.get_public_key())
-    key256 = hashing.sha256(str(key).encode())
+    key256 = hashing.hash_sha256(str(key).encode())
     aes_cipher = AESCipher(key256)
     encrypted_message, iv = aes_cipher.encrypt(message)
     print(encrypted_message)
@@ -46,7 +46,7 @@ def main():
     print(decrypted_message)
 
     # Proving that when a different public key is sent the signature verifying failed
-    m = hashing.hash(message)
+    m = hashing.hash_sha1(message)
     s1, s2 = elgamal.sign_message(m)
     print(elgamal.verify_signature(m, s1, s2, elgamal2.get_public_key()))
 

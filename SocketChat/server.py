@@ -37,9 +37,9 @@ def ELGAMAL_PK(sid, data):
 
 
 @sio.event
-def DEFF_HELLMAN_PK(sid, data):
-    print('DEFF_HELLMAN_PK received:', data)
-    sio.emit('DEFF_HELLMAN_PK_BC', data, skip_sid=sid)
+def DIFF_HELLMAN_PK(sid, data):
+    print('DIFF_HELLMAN_PK received:', data)
+    sio.emit('DIFF_HELLMAN_PK_BC', data, skip_sid=sid)
 
 
 if __name__ == '__main__':
