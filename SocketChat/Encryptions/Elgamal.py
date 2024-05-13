@@ -21,7 +21,7 @@ class Elgamal:
         k_inverse = number_theory.mod_inverse(k, self.q - 1)
         print("K after inverse", k_inverse)
         print("THis should be 1", (k * k_inverse) % (self.q - 1))
-        s1 = pow(self.a, k, self.q)
+        s1 = number_theory.binary_exponentiation(self.a, k, self.q)
         s2 = k_inverse * (message - self.x * s1) % (self.q - 1)
         return s1, s2
 
@@ -35,8 +35,9 @@ class Elgamal:
         Returns:
           Message: Decrypted message
         """
-        v1 = pow(self.a, message, self.q)
-        v2 = pow(y, s1, self.q) * pow(s1, s2, self.q) % self.q
+        v1 = self.number_theory.binary_exponentiation(self.a, message, self.q)
+        v2 = self.number_theory.binary_exponentiation(y, s1, self.q) * self.number_theory.binary_exponentiation(s1, s2,
+                                                                                                                self.q) % self.q
         return v1 == v2
 
     def get_public_key(self):

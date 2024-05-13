@@ -2,8 +2,9 @@
 
 ## Client Implementation
 
-This Python script implements a secure messaging client using custom functions for El-Gamal and Diffie-Hellman
+- This Python script implements a secure messaging client using custom functions for El-Gamal and Diffie-Hellman
 cryptography.
+- The script was tested and with large numbers (100s of digits ) and worked successfully 
 
 ## Steps to send End-To-End Encrypted Data
 
@@ -130,8 +131,7 @@ ensures only the sender and receiver can access the message content.
 3. **Key Setup:**
 
     - Ensure the server has corresponding Diffie-Hellman and ElGamal key pairs generated beforehand.
-    - Replace the file paths (`./Encryptions/diff_hellman_keys.txt` and `./Encryptions/elgamal_keys.txt`) with comments
-      indicating they are no longer used (or remove them if applicable).
+    - Edit the keys in  the file paths (`./Encryptions/diff_hellman_keys.txt` and `./Encryptions/elgamal_keys.txt`) with the desired public data 
 
 4. **Running the Script:**
     - Open a terminal and navigate to the directory containing this script.

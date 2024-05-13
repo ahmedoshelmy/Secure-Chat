@@ -19,11 +19,9 @@ class DiffieHellman:
         self.q = q
         self.a = a
         self.x = random.randint(0, self.q - 1)  # Private Key
-        # self.y = (self.a ** self.x) % self.q  # Public Key
         # Binary Exponentiation for large numbers
         self.y = self.number_theory.binary_exponentiation(self.a, self.x, self.q) % self.q  # Public Key
 
-        print("DiffieHellman initialized")
 
     def calculate_shared_secret_key(self, other_public_key):
         """
